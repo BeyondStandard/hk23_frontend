@@ -5,7 +5,7 @@ import { Header } from "~/components/Header"
 export function Base() {
   return (
     <>
-      <Header />
+      {/* <Header /> */}
       <Outlet />
     </>
   )

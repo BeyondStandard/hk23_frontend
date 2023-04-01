@@ -1,3 +1,6 @@
+export { POINTS_OF_INTEREST } from "./pointsOfInterest"
+export { BUTTONS } from "./buttons"
+
 export const NAV_LINKS = [
   {
     to: "/home",

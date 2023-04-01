@@ -103,7 +103,7 @@ const BaseItemEntry: React.FC<BaseItemEntryProps> = ({
   const [isExpanded, setExpanded] = React.useState(false)
   return (
     <Accordion
-      className="w-full flex justify-between content-start py-2 border-solid border-t-b border-b-0 border-x-0 border-zinc-700 bg-zinc-800 flex-col"
+      className="w-full flex justify-between content-start py-2 border-solid border-t-b border-b-0 border-x-0 border-zinc-700 flex-col"
       elevation={0}
     >
       <AccordionSummary>

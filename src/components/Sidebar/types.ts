@@ -1,6 +1,6 @@
 import { ReactNode } from "react"
 
-export type DashboardBoxProps = {
+export type SidebarProps = {
   title?: string
   children: ReactNode
 }

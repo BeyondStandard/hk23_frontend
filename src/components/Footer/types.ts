@@ -1,1 +1,1 @@
-export type FooterProps = { prop?: string }
+export type FooterProps = { prop?: string, className?: string }

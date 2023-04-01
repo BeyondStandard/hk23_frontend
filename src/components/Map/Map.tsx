@@ -1,13 +1,15 @@
 import mapboxgl from "mapbox-gl"
-import { RefObject, useEffect, useRef, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 
 import polygon from "~/constants/polygons.json"
-import { contains } from "~/utils/contains"
 import { easingFunctions } from "~/utils/easingFunctions"
+import { useMarkers } from "~/hooks"
 
-import type { GroupingTable, MapProps, MinMax, Polygon } from "./types"
+import type { MapProps, Polygon } from "./types"
 
-import { AreaInfo, ItemType, MapItem } from "~/types/definitions"
+import { AreaInfo } from "~/types/definitions"
+import { createGroupingTable } from "~/utils/createGroupingTable"
+import { GroupingTable, MinMax } from "~/types/utilsTypes"
 
 mapboxgl.accessToken = import.meta.env.VITE_MAPBOX_TOKEN!
 
@@ -79,7 +81,7 @@ export function MapBox({
     if (map.current) return // initialize map only once
     map.current = new mapboxgl.Map({
       container: mapContainer.current,
-      style: "mapbox://styles/mapbox/dark-v11",
+      style: "mapbox://styles/mapbox/light-v11",
       center: [lng, lat],
       zoom: zoom,
     })
@@ -116,7 +118,7 @@ export function MapBox({
             },
             paint: {
               "fill-color": `rgba(${red}, ${green}, ${blue}, 0.2)`,
-              "fill-outline-color": "rgba(244, 129, 30, 1)",
+              "fill-outline-color": "#000000",
             },
           })
 
@@ -215,7 +217,7 @@ export function MapBox({
     allItems.chargers &&
     allItems.stations
   ) {
-    createGroupingTable(allItems, geoJSON)
+    ({groupingTable, minMax} = createGroupingTable(allItems, geoJSON, minMax))
   }
 
   return (
@@ -225,115 +227,4 @@ export function MapBox({
       <div ref={mapContainer} id="map" className="map-container" />
     </div>
   )
-}
-
-function useMarkers(
-  map: RefObject<mapboxgl.Map>,
-  items: MapItem[],
-  itemType: ItemType
-) {
-  const [markers, setMarkers] = useState<mapboxgl.Marker[]>([])
-  useEffect(() => {
-    if (map.current == null) return
-
-    markers.forEach((marker) => {
-      marker.remove()
-    })
-
-    let color: string
-    if (itemType === "user") {
-      color = "#bb0000"
-    } else if (itemType === "charger") {
-      color = "#f4e61f"
-    } else {
-      color = "#ff5f00"
-    }
-    const newMarkers: any[] = []
-    if (items) {
-      items.forEach((item) => {
-        // const markerElement = document.getElementById(`${itemType}-${item.id}`)
-        // const markerElement = document.getElementById("testid")
-        const marker = new mapboxgl.Marker({
-          // element: markerElement,
-          color: color,
-          scale: 0.7,
-        })
-          .setLngLat([item.lng, item.lat])
-          .addTo(map.current!)
-        newMarkers.push(marker)
-      })
-    }
-    setMarkers(newMarkers)
-  }, [items])
-}
-
-function createGroupingTable(allItems: any, geoJSON: any) {
-  groupingTable = {}
-  // initialize table with 0 chargers
-  geoJSON.features.forEach((area: any) => {
-    groupingTable![area.properties.name] = {
-      numCharger: 0,
-      chargers: [],
-      users: [],
-      stations: [],
-    }
-  })
-
-  let min = 100
-  let max = 0
-
-  geoJSON.features.forEach((area: any) => {
-    allItems.chargers.forEach((charger: any) => {
-      if (
-        contains(area.geometry.coordinates, charger.lat, charger.lng) &&
-        groupingTable != null
-      ) {
-        if (groupingTable[area.properties.name] !== undefined) {
-          // increment count of number of chargers
-          groupingTable[area.properties.name].numCharger += 1
-          groupingTable[area.properties.name].chargers.push(charger)
-
-          // update max
-          if (max < groupingTable[area.properties.name].numCharger) {
-            max = groupingTable[area.properties.name].numCharger
-          }
-        }
-      }
-    })
-    allItems.users.forEach((user: any) => {
-      if (
-        contains(area.geometry.coordinates, user.lat, user.lng) &&
-        groupingTable != null
-      ) {
-        if (groupingTable[area.properties.name] !== undefined) {
-          groupingTable[area.properties.name].users.push(user)
-        }
-      }
-    })
-    allItems.stations.forEach((station: any) => {
-      if (
-        contains(area.geometry.coordinates, station.lat, station.lng) &&
-        groupingTable != null
-      ) {
-        if (groupingTable[area.properties.name] !== undefined) {
-          groupingTable[area.properties.name].stations.push(station)
-        }
-      }
-    })
-  })
-
-  // update min
-  for (const e in groupingTable as any) {
-    if (min > groupingTable[e].numCharger) {
-      min = groupingTable[e].numCharger
-    }
-  }
-
-  // console.log(groupingTable)
-  // console.log("min: " + min + ", max: " + max)
-
-  minMax = {
-    min: min,
-    max: max,
-  }
 }

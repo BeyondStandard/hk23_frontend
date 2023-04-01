@@ -1,12 +1,12 @@
 import { AppBar, Toolbar, Typography } from "@mui/material"
 
 import type { FooterProps } from "./types"
-export function Footer({ prop = "Footer" }: FooterProps) {
+export function Footer({ prop = "Footer", className = "" }: FooterProps) {
   return (
-    <div>
-      <AppBar position="static">
+    <div className={className}>
+      <AppBar position="static" className="min-h-5">
         <Toolbar style={style}>
-          <Typography>&#169; HackaTUM 2022</Typography>
+          <Typography className="text-xs">&#169; BeyondStandard | Hackkosice 2023</Typography>
         </Toolbar>
       </AppBar>
     </div>
@@ -15,5 +15,5 @@ export function Footer({ prop = "Footer" }: FooterProps) {
 const style = {
   display: "flex",
   justifyContent: "center",
-  background: "rgb(255,95, 0)",
+  minHeight: "2rem"
 }

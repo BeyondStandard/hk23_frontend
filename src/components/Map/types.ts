@@ -25,17 +25,3 @@ export type JSONValue =
 export interface JSONObject {
   [k: string]: JSONValue
 }
-
-export type GroupingTable = {
-  [key: string]: {
-    numCharger: number
-    chargers: Charger[]
-    users: User[]
-    stations: Station[]
-  }
-} | null
-
-export type MinMax = {
-  min: number
-  max: number
-}

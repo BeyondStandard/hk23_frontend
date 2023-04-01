@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Use whatever version you are running locally (see node -v)
 FROM node:16
 
@@ -14,3 +15,16 @@ COPY . /app
 EXPOSE 8080
 
 CMD ["npm", "start"]
+=======
+FROM node:current-slim
+
+WORKDIR /frontend
+
+COPY package*.json ./
+
+RUN yarn install
+
+COPY . ./
+
+CMD ["yarn", "start"]
+>>>>>>> 6c7a078e19e03f4189e547f330282b99e4fa45a8
