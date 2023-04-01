@@ -7,7 +7,7 @@ import React from "react"
 
 import { ItemIcon } from "~/components/ItemIcon"
 
-import { Charger, ItemType, Station, User } from "~/controllers/definitions"
+import { Charger, ItemType, Station, User } from "~/types/definitions"
 
 type UserEntryProps = {
   user: User

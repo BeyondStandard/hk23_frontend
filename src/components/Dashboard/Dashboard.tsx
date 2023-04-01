@@ -1,21 +1,16 @@
-import Switch from "@mui/material/Switch"
-import React, { ReactNode } from "react"
+import React from "react"
 
-import { Footer } from "~/components/Footer"
 import { ChargerEntry, StationEntry, UserEntry } from "~/components/ItemEntries"
-import { ItemIcon } from "~/components/ItemIcon"
+import { SwitchControl } from "~/components/SwitchControl"
 
 import { DashboardBox } from "../DashboardBox"
 import { Map } from "../Map"
-
-import type { DashboardProps } from "./types"
 
 import {
   chargersToListItems,
   chargersToMapItems,
   useChargers,
 } from "~/controllers/chargers"
-import { AreaInfo, ItemType } from "~/controllers/definitions"
 import {
   stationsToListItems,
   stationsToMapItems,
@@ -26,8 +21,9 @@ import {
   usersToListItems,
   usersToMapItems,
 } from "~/controllers/users"
+import { AreaInfo } from "~/types/definitions"
 
-export function Dashboard({ prop = "Dashboard" }: DashboardProps) {
+export function Dashboard() {
   const users = useUsers()
   const { chargers, setUserAsCharger } = useChargers()
   const stations = useStations()
@@ -50,7 +46,7 @@ export function Dashboard({ prop = "Dashboard" }: DashboardProps) {
   )
 
   return (
-    <div className="w-full h-screen bg-black flex flex-col overflow-hidden">
+    <div className="w-full h-screen flex flex-col overflow-hidden">
       <div className="flex w-full h-full pt-2 content-center justify-center flex-row">
         <div className="h-full w-3/12 px-1.5">
           <DashboardBox title={"Controls"}>
@@ -124,33 +120,6 @@ export function Dashboard({ prop = "Dashboard" }: DashboardProps) {
         </div>
       </div>
       {/* <Footer /> */}
-    </div>
-  )
-}
-
-type SwitchControlProps = {
-  title: string
-  onChange: (activated: boolean) => void
-  checked: boolean
-  switchType: ItemType
-}
-
-const SwitchControl: React.FC<SwitchControlProps> = (props) => {
-  return (
-    <div className="w-full flex justify-between content-start py-2 border-solid border-t-b border-b-0 border-x-0 border-zinc-700">
-      <div className="mx-6 w-full flex flex-row justify-between">
-        <ItemIcon itemType={props.switchType} />
-        <p className="text-white text-xl w-20 h-full text-bottom">
-          {props.title}
-        </p>
-        <Switch
-          aria-label={props.switchType}
-          checked={props.checked}
-          onChange={(e) => {
-            props.onChange(e.target.checked)
-          }}
-        />
-      </div>
     </div>
   )
 }

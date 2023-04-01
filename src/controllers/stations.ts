@@ -1,7 +1,8 @@
 import React from "react"
 
-import { STATION_LIST_ENDPOINT } from "./consts"
-import { ListItem, MapItem, Station } from "./definitions"
+import { STATION_LIST_ENDPOINT } from "../constants"
+import { ListItem, MapItem, Station } from "../types/definitions"
+
 import { loadData } from "./utils"
 
 export function useStations(): Station[] | null {

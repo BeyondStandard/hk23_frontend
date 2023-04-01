@@ -1,7 +1,8 @@
 import React from "react"
 
-import { CHARGER_LIST_ENDPOINT } from "./consts"
-import { Charger, ListItem, MapItem, User } from "./definitions"
+import { CHARGER_LIST_ENDPOINT } from "../constants"
+import { Charger, ListItem, MapItem, User } from "../types/definitions"
+
 import { loadData } from "./utils"
 
 type ChargerState = {

@@ -1,12 +1,12 @@
 {
-  "name": "kosice23_frontend",
+  "name": "hk23_frontend",
   "description": "Frontend application with react",
   "version": "1.0.0",
   "author": "Gilles Tanson",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/BeyondStandard/kosice23"
+    "url": ""
   },
   "keywords": [
     "react",

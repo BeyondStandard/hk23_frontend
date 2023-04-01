@@ -1,4 +1,4 @@
-import { AreaInfo, MapItem } from "~/controllers/definitions"
+import { AreaInfo, Charger, MapItem, Station, User } from "~/types/definitions"
 
 export type MapProps = {
   prop?: string
@@ -10,8 +10,8 @@ export type MapProps = {
   onAreaSelected: (areaInfo: AreaInfo) => void
 }
 
-export type Polygon = {
-  [key: string]: JSONValue
+export interface Polygon {
+  [key: string]: number[][]
 }
 
 export type JSONValue =
@@ -24,4 +24,18 @@ export type JSONValue =
 
 export interface JSONObject {
   [k: string]: JSONValue
+}
+
+export type GroupingTable = {
+  [key: string]: {
+    numCharger: number
+    chargers: Charger[]
+    users: User[]
+    stations: Station[]
+  }
+} | null
+
+export type MinMax = {
+  min: number
+  max: number
 }

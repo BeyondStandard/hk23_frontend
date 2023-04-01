@@ -1,7 +1,8 @@
 import React from "react"
 
-import { USER_LIST_ENDPOINT } from "./consts"
-import { ListItem, MapItem, User } from "./definitions"
+import { USER_LIST_ENDPOINT } from "../constants"
+import { ListItem, MapItem, User } from "../types/definitions"
+
 import { loadData } from "./utils"
 
 export function useUsers(): User[] | null {

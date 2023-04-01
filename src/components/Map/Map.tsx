@@ -1,19 +1,13 @@
-import mapboxgl, { Map } from "mapbox-gl"
-import { FC, RefObject, useEffect, useRef, useState } from "react"
+import mapboxgl from "mapbox-gl"
+import { RefObject, useEffect, useRef, useState } from "react"
 
-import { ItemIcon } from "~/components/ItemIcon"
 import polygon from "~/constants/polygons.json"
+import { contains } from "~/utils/contains"
+import { easingFunctions } from "~/utils/easingFunctions"
 
-import type { JSONObject, JSONValue, MapProps, Polygon } from "./types"
+import type { GroupingTable, MapProps, MinMax, Polygon } from "./types"
 
-import {
-  AreaInfo,
-  Charger,
-  ItemType,
-  MapItem,
-  Station,
-  User,
-} from "~/controllers/definitions"
+import { AreaInfo, ItemType, MapItem } from "~/types/definitions"
 
 mapboxgl.accessToken = import.meta.env.VITE_MAPBOX_TOKEN!
 
@@ -21,21 +15,14 @@ let max_long = 0
 let max_lat = 0
 let min_long = 180
 let min_lat = 180
-let groupingTable: {
-  [key: string]: {
-    numCharger: number
-    chargers: Charger[]
-    users: User[]
-    stations: Station[]
-  }
-  minMax?: {
-    min: number
-    max: number
-  }
-} | null = null
+let groupingTable: GroupingTable = null
+let minMax: MinMax = {
+  min: 0,
+  max: 100,
+}
+const poly: Polygon = polygon
 
 export function MapBox({
-  prop = "Map",
   users,
   chargers,
   stations,
@@ -52,9 +39,9 @@ export function MapBox({
   const geoJSON: any = { type: "FeatureCollection", features: [] }
 
   if (geoJSON.features.length === 0) {
-    for (const x in polygon as JSONObject) {
-      const long: number = polygon[x][0][0]
-      const lat: number = polygon[x][0][1]
+    for (const x in polygon as Polygon) {
+      const long: number = poly[x][0][0]
+      const lat: number = poly[x][0][1]
 
       if (long > max_long) {
         max_long = long
@@ -82,7 +69,7 @@ export function MapBox({
         },
         geometry: {
           type: "Polygon",
-          coordinates: [polygon[x]],
+          coordinates: [poly[x]],
         },
       })
     }
@@ -104,9 +91,8 @@ export function MapBox({
       geoJSON.features.forEach((e: any) => {
         if (groupingTable) {
           const gradient =
-            (groupingTable[e.properties.name].numCharger -
-              groupingTable.minMax!.min) /
-            (groupingTable.minMax!.max - groupingTable.minMax!.min)
+            (groupingTable[e.properties.name].numCharger - minMax.min) /
+            (minMax.max - minMax.min)
 
           const blue = 0
           const green = Math.round(gradient * 255)
@@ -145,7 +131,7 @@ export function MapBox({
 
             const areaName = x.features[0].properties.name
             const areaData = groupingTable![areaName]
-            console.log(areaData)
+
             onAreaSelected({
               areaName: areaName,
               ...areaData,
@@ -223,7 +209,6 @@ export function MapBox({
   useMarkers(map, chargers, "charger")
   useMarkers(map, stations, "station")
 
-  console.log(allItems)
   if (
     !groupingTable &&
     allItems.users &&
@@ -240,38 +225,6 @@ export function MapBox({
       <div ref={mapContainer} id="map" className="map-container" />
     </div>
   )
-}
-
-const easingFunctions = {
-  // start slow and gradually increase speed
-  easeInCubic: function (t: number) {
-    return t * t * t
-  },
-  // start fast with a long, slow wind-down
-  easeOutQuint: function (t: number) {
-    return 1 - Math.pow(1 - t, 5)
-  },
-  // slow start and finish with fast middle
-  easeInOutCirc: function (t: number) {
-    return t < 0.5
-      ? (1 - Math.sqrt(1 - Math.pow(2 * t, 2))) / 2
-      : (Math.sqrt(1 - Math.pow(-2 * t + 2, 2)) + 1) / 2
-  },
-  // fast start with a "bounce" at the end
-  easeOutBounce: function (t: number) {
-    const n1 = 7.5625
-    const d1 = 2.75
-
-    if (t < 1 / d1) {
-      return n1 * t * t
-    } else if (t < 2 / d1) {
-      return n1 * (t -= 1.5 / d1) * t + 0.75
-    } else if (t < 2.5 / d1) {
-      return n1 * (t -= 2.25 / d1) * t + 0.9375
-    } else {
-      return n1 * (t -= 2.625 / d1) * t + 0.984375
-    }
-  },
 }
 
 function useMarkers(
@@ -379,43 +332,8 @@ function createGroupingTable(allItems: any, geoJSON: any) {
   // console.log(groupingTable)
   // console.log("min: " + min + ", max: " + max)
 
-  groupingTable["minMax"] = {
+  minMax = {
     min: min,
     max: max,
-  }
-}
-
-/**
- * @return {boolean} true if (lng, lat) is in bounds
- */
-function contains(bounds: string | any[], lat: any, lng: any): boolean {
-  let count = 0
-  for (let b = 0; b < bounds[0].length; b++) {
-    const vertex1 = bounds[0][b]
-    const vertex2 = bounds[0][(b + 1) % bounds[0].length]
-    if (west(vertex1, vertex2, lng, lat)) ++count
-  }
-  return count % 2 === 1
-
-  /**
-   * @return {boolean} true if (x,y) is west of the line segment connecting A and B
-   */
-  function west(
-    A: [number, number], // { y: number; x: number },
-    B: [number, number], // { y: number; x: number },
-    x: number,
-    y: number
-  ): boolean {
-    if (A[1] <= B[1]) {
-      if (y <= A[1] || y > B[1] || (x >= A[0] && x >= B[0])) {
-        return false
-      } else if (x < A[0] && x < B[0]) {
-        return true
-      } else {
-        return (y - A[1]) / (x - A[0]) > (B[1] - A[1]) / (B[0] - A[0])
-      }
-    } else {
-      return west(B, A, x, y)
-    }
   }
 }
