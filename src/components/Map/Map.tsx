@@ -41,7 +41,6 @@ export function MapBox({
   const [update, setUpdate] = useState(false)
 
   const geoJSON: GeoJSON = { type: "FeatureCollection", features: [] }
-  console.log(pointsOfInterest)
 
   if (geoJSON.features.length === 0 && districts) {
     for (const x in districts as Area[]) {
@@ -93,6 +92,7 @@ export function MapBox({
       const x = "Kosice"
       // Add a layer showing the state polygons.
       geoJSON.features.forEach((e: any) => {
+        console.log(groupingTable[e.properties.name].numPoints)
         const gradient =
           // @ts-ignore
           (groupingTable[e.properties.name].numPoints - minMax.min) /
@@ -140,7 +140,7 @@ export function MapBox({
         map.current.on("click", `${e.properties.name}-layer`, (x: any) => {
           new mapboxgl.Popup()
             .setLngLat(x.lngLat)
-            .setHTML(x.features[0].properties.name)
+            .setHTML(e.properties.name)
             .addTo(map.current)
 
           console.log(x)

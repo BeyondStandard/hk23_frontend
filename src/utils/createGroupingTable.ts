@@ -17,9 +17,10 @@ export function createGroupingTable(allItems: any, geoJSON: any, minMax: MinMax,
 
   let min = 100
   let max = 0
-  console.log(allItems)
   geoJSON.features.forEach((area: any) => {
     allItems.points.forEach((point: PointOfInterest) => {
+      console.log(area)
+      console.log(point)
       if (
         contains(area.geometry.coordinates, point.coordinates[1], point.coordinates[0]) &&
         groupingTable != null
