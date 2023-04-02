@@ -15,5 +15,6 @@ export function Footer({ prop = "Footer", className = "" }: FooterProps) {
 const style = {
   display: "flex",
   justifyContent: "center",
-  minHeight: "2rem"
+  minHeight: "2rem",
+  backgroundColor: "#009da5",
 }

@@ -8,7 +8,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 
 import type { ItemIconProps } from "./types"
 
-const COLOR = "#0084ff"
+const COLOR = "#009da5"
 const ICON_CLASS = "fa-lg"
 
 export function ItemIcon({ prop = "ItemIcon", itemType }: ItemIconProps) {

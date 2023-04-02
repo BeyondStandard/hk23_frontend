@@ -19,17 +19,6 @@ export function Sidebar({ title, children }: SidebarProps) {
       {title && (
         <p className="text-slate-600 text-center text-2xl p-4">{title}</p>
       )}
-      <Tabs
-        value={value}
-        onChange={handleChange}
-        aria-label="tabbar"
-        variant="fullWidth"
-        className="mb-1 border-solid border-1 border-t-0 border-x-0 border-zinc-300"
-      >
-        <Tab icon={<PhoneIcon />} label="RECENTS" />
-        <Tab icon={<FavoriteIcon />} label="FAVORITES" />
-        <Tab icon={<PersonPinIcon />} label="NEARBY" />
-      </Tabs>
       {/* <div style={{ overflowY: "scroll" }}> */}
       {children}
       {/* </div> */}
