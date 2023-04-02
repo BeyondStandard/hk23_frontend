@@ -1,7 +1,6 @@
 import React from "react"
 
-import { USER_LIST_ENDPOINT } from "../constants"
-import { ListItem, MapItem, PointOfInterest } from "../types/definitions"
+import {  MapItem, PointOfInterest } from "../types/definitions"
 
 import { loadData } from "./utils"
 import { ButtonProps } from "~/components/ButtonGrid/types"
@@ -11,7 +10,7 @@ export function usePoints(
 ): ButtonProps[] | null {
   const [points, setPoints] = React.useState<ButtonProps[] | null>(null)
   React.useEffect(() => {
-    // if (points != null) return
+    if (points) setPoints([])
     for (const el in buttonsSelected) {
       loadData(
         "/points_of_interest?limit=50&field=category_1&value=" + buttonsSelected[el].text
@@ -30,14 +29,6 @@ export function usePoints(
 
   return points
 }
-
-// export function usersToListItems(users: User[]): ListItem[] {
-//   return users.map((user) => ({
-//     id: user.id,
-//     title: user.name,
-//     subtitle: user.address,
-//   }))
-// }
 
 export function pointsToMapItems(points: ButtonProps[] | null): MapItem[] {
   if (points != null && points.length > 0) {

@@ -42,7 +42,7 @@ export function useMarkers(
           }
         })
       })
+      setMarkers(newMarkers)
     }
-    setMarkers(newMarkers)
   }, [items])
 }

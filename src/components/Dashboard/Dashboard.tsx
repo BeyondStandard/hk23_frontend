@@ -21,25 +21,27 @@ import {
   usersToListItems,
   usersToMapItems,
 } from "~/controllers/users"
-import { AreaInfo } from "~/types/definitions"
+import { Area, AreaInfo } from "~/types/definitions"
 import { MenuProps } from "~/components/Dashboard/types"
 import { ButtonGrid } from "~/components/ButtonGrid"
 import { BUTTONS } from "~/constants/buttons"
 import { pointsToMapItems, usePoints } from "~/controllers/getPoints"
 import { ButtonProps } from "~/components/ButtonGrid/types"
+import { useDistricts } from "~/controllers/getDistricts"
 
 export function Dashboard() {
   // const users = useUsers()
   // const { chargers, setUserAsCharger } = useChargers()
   // const stations = useStations()
 
-  const [showUsers, setShowUsers] = React.useState(false)
-  const [showChargers, setShowChargers] = React.useState(false)
-  const [showStations, setShowStations] = React.useState(false)
+  // const [showUsers, setShowUsers] = React.useState(false)
+  // const [showChargers, setShowChargers] = React.useState(false)
+  // const [showStations, setShowStations] = React.useState(false)
   const [showAreas, setShowAreas] = React.useState(false)
   const [buttonsSelected, setButtonsSelected] = React.useState<ButtonProps[]>(
     []
   )
+  const poly: Area[] | null = useDistricts()
   const [update, setUpdate] = React.useState(false)
 
   const pointsOfInterest = usePoints(buttonsSelected)
@@ -59,11 +61,6 @@ export function Dashboard() {
   // React.useEffect(() => {
   //   setUpdate(!update)
   // }, [pointsOfInterest])
-
-  const handleChange = (arr: ButtonProps[]) => {
-    setButtonsSelected(arr)
-    // setUpdate(!update)
-  }
 
   return (
     <div className="w-full h-screen flex flex-col overflow-hidden bg-gray-500">
@@ -94,27 +91,30 @@ export function Dashboard() {
               switchType="station"
               onChange={setShowStations}
             />*/}
-            <ButtonGrid elements={BUTTONS} setSelected={handleChange} />
+            <ButtonGrid elements={BUTTONS} setSelected={setButtonsSelected} />
           </Sidebar>
         </div>
         <div className="h-full w-6/12 w-full pr-1.5">
-          <Map
-            // users={usersToMapItems(showUsers ? users ?? [] : [])}
-            // chargers={chargersToMapItems(showChargers ? chargers ?? [] : [])}
-            // stations={stationsToMapItems(showStations ? stations ?? [] : [])}
-            users={[]}
-            chargers={[]}
-            stations={[]}
-            pointsOfInterest={pointsToMapItems(pointsOfInterest)}
-            allItems={{
-              // users: users,
-              // chargers: chargers,
-              // stations: stations,
-              points: pointsOfInterest,
-            }}
-            showAreas={showAreas}
-            onAreaSelected={setSelectedArea}
-          />
+          {poly &&
+            <Map
+              // users={usersToMapItems(showUsers ? users ?? [] : [])}
+              // chargers={chargersToMapItems(showChargers ? chargers ?? [] : [])}
+              // stations={stationsToMapItems(showStations ? stations ?? [] : [])}
+              users={[]}
+              chargers={[]}
+              stations={[]}
+              pointsOfInterest={pointsToMapItems(buttonsSelected)}
+              districts={poly!}
+              allItems={{
+                // users: users,
+                // chargers: chargers,
+                // stations: stations,
+                points: pointsOfInterest,
+              }}
+              showAreas={showAreas}
+              onAreaSelected={setSelectedArea}
+            />
+          }
         </div>
         {/* <div className="h-full w-3/12 px-1.5">
           {selectedArea != null && (

@@ -1,11 +1,12 @@
-import { Charger, User, Station } from "~/types/definitions"
+import { Charger, User, Station, PointOfInterest } from "~/types/definitions"
 
 export type GroupingTable = {
   [key: string]: {
-    numCharger: number
-    chargers: Charger[]
-    users: User[]
-    stations: Station[]
+    numPoints: number
+    // chargers: Charger[]
+    // users: User[]
+    // stations: Station[]
+    points: PointOfInterest[]
   }
 } | null
 

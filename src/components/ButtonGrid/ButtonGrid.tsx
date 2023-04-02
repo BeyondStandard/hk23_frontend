@@ -9,7 +9,7 @@ import {
 } from "@mui/material"
 import type { ButtonGridProps, ButtonProps } from "./types"
 import { styled } from "@mui/material/styles"
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 import { usePoints } from "~/controllers/getPoints"
 
 const Item = styled(Paper)(({ theme }) => ({
@@ -26,13 +26,12 @@ const Item = styled(Paper)(({ theme }) => ({
 }))
 
 export function ButtonGrid({ elements, setSelected }: ButtonGridProps) {
-  const [update, setUpdate] = useState(false)
+  // const [selectedCategories, setSelectedCategories] = useState([] as ButtonProps[])
 
   const handleChange = (
     button: ButtonProps,
     event: React.MouseEvent<HTMLDivElement, MouseEvent>
   ) => {
-    // setUpdate(!update)
     button.active = !button.active
     let arr: ButtonProps[] = []
     elements.forEach((item) => {
@@ -46,6 +45,7 @@ export function ButtonGrid({ elements, setSelected }: ButtonGridProps) {
     })
     setSelected(arr)
   }
+
   return (
     <Box sx={{ flexGrow: 1 }} className="absolute bottom-10">
       <Grid container spacing={0.25}>
