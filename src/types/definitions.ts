@@ -6,11 +6,46 @@ export type ListItem = {
 
 export type MapItem = {
   id: string
-  lat: number
-  lng: number
+  coordinates: [{
+    lat: number
+    lng: number
+  }?]
+  color: string
 }
 
-export type ItemType = "area" | "user" | "charger" | "station"
+export type ItemType = "area" | "user" | "charger" | "station" | "point"
+
+export type PointOfInterest = {
+  _id: string
+  name: string
+  category_1: string
+  category_2: string
+  location: {
+    type: string
+    coordinates: [
+      number,
+      number
+    ]
+  },
+  poly_5: boolean | null
+  poly_10: boolean | null
+  poly_15: boolean | null
+  poly_20: boolean | null
+}
+
+// export type
+// {
+//   "detail": [
+//     {
+//       "loc": [
+//         "string",
+//         0
+//       ],
+//       "msg": "string",
+//       "type": "string"
+//     }
+//   ]
+// }
 
 export type User = {
   id: string

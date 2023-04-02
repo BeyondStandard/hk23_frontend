@@ -7,7 +7,7 @@ import { useMarkers } from "~/hooks"
 
 import type { MapProps, Polygon } from "./types"
 
-import { AreaInfo } from "~/types/definitions"
+import { AreaInfo, MapItem } from "~/types/definitions"
 import { createGroupingTable } from "~/utils/createGroupingTable"
 import { GroupingTable, MinMax } from "~/types/utilsTypes"
 
@@ -28,14 +28,15 @@ export function MapBox({
   users,
   chargers,
   stations,
+  pointsOfInterest,
   allItems,
   showAreas,
   onAreaSelected,
 }: MapProps) {
   const mapContainer: any = useRef(null)
   const map: any = useRef(null)
-  const [lng, setLng] = useState(11.576123)
-  const [lat, setLat] = useState(48.137152)
+  const [lng, setLng] = useState(21.258355484026648)
+  const [lat, setLat] = useState(48.719772247803725)
   const [zoom, setZoom] = useState(13)
 
   const geoJSON: any = { type: "FeatureCollection", features: [] }
@@ -87,7 +88,7 @@ export function MapBox({
     })
 
     map.current.on("load", () => {
-      const x = "Munich"
+      const x = "Kosice"
 
       // Add a layer showing the state polygons.
       geoJSON.features.forEach((e: any) => {
@@ -210,6 +211,7 @@ export function MapBox({
   useMarkers(map, users, "user")
   useMarkers(map, chargers, "charger")
   useMarkers(map, stations, "station")
+  useMarkers(map, pointsOfInterest, "point")
 
   if (
     !groupingTable &&

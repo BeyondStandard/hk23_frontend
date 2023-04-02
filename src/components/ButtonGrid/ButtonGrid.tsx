@@ -10,6 +10,7 @@ import {
 import type { ButtonGridProps, ButtonProps } from "./types"
 import { styled } from "@mui/material/styles"
 import React, { useState } from "react"
+import { usePoints } from "~/controllers/getPoints"
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
@@ -24,21 +25,31 @@ const Item = styled(Paper)(({ theme }) => ({
   width: "100%",
 }))
 
-export function ButtonGrid({ elements }: ButtonGridProps) {
+export function ButtonGrid({ elements, setSelected }: ButtonGridProps) {
   const [update, setUpdate] = useState(false)
 
   const handleChange = (
     button: ButtonProps,
     event: React.MouseEvent<HTMLDivElement, MouseEvent>
   ) => {
-    setUpdate(!update)
+    // setUpdate(!update)
     button.active = !button.active
+    let arr: ButtonProps[] = []
+    elements.forEach((item) => {
+      if (item.active) {
+        if (button.text != "Deselect All") {
+          arr.push(item)
+        } else {
+          button.active, item.active = false
+        }
+      }
+    })
+    setSelected(arr)
   }
   return (
     <Box sx={{ flexGrow: 1 }} className="absolute bottom-10">
       <Grid container spacing={0.25}>
         {elements.map((el, i) => {
-          console.log(el.color)
           return (
             <Grid item xs={3} key={`${el}-${i}`}>
               <ButtonBase sx={{ width: "100%" }}>

@@ -1,7 +1,7 @@
 import mapboxgl from "mapbox-gl"
 import { RefObject, useEffect, useState } from "react"
 import { ItemType, MapItem } from "~/types/definitions"
-
+import colors from "tailwindcss/colors"
 
 export function useMarkers(
   map: RefObject<mapboxgl.Map>,
@@ -28,13 +28,19 @@ export function useMarkers(
     if (items) {
       items.forEach((item) => {
         // const markerElement = document.getElementById(`${itemType}-${item.id}`)
-        const marker = new mapboxgl.Marker({
-          color: color,
-          scale: 0.7,
+        item.coordinates.forEach((coord) => {
+          if (coord) {
+            newMarkers.push(
+              new mapboxgl.Marker({
+                // @ts-ignore
+                color: colors[item.color.split("-")[1]]["600"],
+                scale: 0.7,
+              })
+                .setLngLat([coord.lng, coord.lat])
+                .addTo(map.current!)
+            )
+          }
         })
-          .setLngLat([item.lng, item.lat])
-          .addTo(map.current!)
-        newMarkers.push(marker)
       })
     }
     setMarkers(newMarkers)

@@ -1,4 +1,3 @@
-import { Color } from "@mui/material"
 import { ReactNode } from "react"
 
 export type ButtonProps = {
@@ -6,6 +5,15 @@ export type ButtonProps = {
   icon: ReactNode
   color: string
   active: boolean
+  coordinates: [
+    {
+      lat: number
+      lng: number
+    }?
+  ]
 }
 
-export type ButtonGridProps = { elements: ButtonProps[] }
+export type ButtonGridProps = {
+  elements: ButtonProps[]
+  setSelected: CallableFunction
+}

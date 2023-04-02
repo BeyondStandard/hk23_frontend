@@ -5,6 +5,7 @@ export type MapProps = {
   users: MapItem[]
   chargers: MapItem[]
   stations: MapItem[]
+  pointsOfInterest: MapItem[]
   allItems: Record<string, unknown>
   showAreas: boolean
   onAreaSelected: (areaInfo: AreaInfo) => void
